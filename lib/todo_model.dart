@@ -3,11 +3,12 @@ class TodoModel {
   final String taskName;
   final String dueDate;
   final String type;
-  bool status;
-  TodoModel(
-      {required this.id,
-      required this.taskName,
-      required this.dueDate,
-      required this.type,
-      required this.status});
+   bool status;
+  TodoModel({
+    required this.id,
+    required this.dueDate,
+    required this.status,
+    required this.taskName,
+    required this.type,
+  });
 }
