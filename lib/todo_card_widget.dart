@@ -23,10 +23,17 @@ class TodoCardWidget extends StatelessWidget {
         leading: Checkbox(
           onChanged: (value) {
             update(todoModel.id, value!);
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                content: value == true
+                    ? const Text("Great! Task completed!")
+                    : const Text("Task unchecked")));
           },
           value: todoModel.status,
         ),
-        title: Text(todoModel.taskName, style: const TextStyle(fontSize: 20),),
+        title: Text(
+          todoModel.taskName,
+          style: const TextStyle(fontSize: 20),
+        ),
         subtitle: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

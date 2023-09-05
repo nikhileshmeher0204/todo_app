@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  String category = "Pending";
+  String category = "All List";
   updateStatus(String id, bool status) async {
     int index = listOfTodo.indexWhere((element) => element.id == id);
     listOfTodo[index].status = status;
@@ -106,17 +106,36 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body:ListView(
-        children: _tempListOfTodo
-            .map(
-              (e) => TodoCardWidget(
-                todoModel: e,
-                update: updateStatus,
-                delete: deleteTask,
+      body:Stack(
+        children: [
+           Column(
+             crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(_tempListOfTodo.where((element) => element.status == false).isNotEmpty?
+                "You have ${_tempListOfTodo.where((element) => element.status == false).length} tasks left out of ${listOfTodo.length}":" Add new tasks to show them here!",
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontStyle: FontStyle.italic
+                ),
               ),
-            )
-            .toList(),
-      ),
+              Expanded(
+                child: ListView(
+                  children: _tempListOfTodo
+                      .map(
+                        (e) => TodoCardWidget(
+                      todoModel: e,
+                      update: updateStatus,
+                      delete: deleteTask,
+                    ),
+                  )
+                      .toList(),
+                ),
+              ),
+            ],
+          ),
+        ],
+
+      )
     );
   }
 }
