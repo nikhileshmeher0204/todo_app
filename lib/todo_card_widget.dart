@@ -1,13 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/todo_model.dart';
+
 class TodoCardWidget extends StatelessWidget {
   final TodoModel todoModel;
-  final Function(String,bool) update;
+  final Function(String, bool) update;
+  final Function(String) delete;
 
   const TodoCardWidget({
     Key? key,
     required this.todoModel,
     required this.update,
+    required this.delete,
   }) : super(key: key);
 
   @override
@@ -18,21 +21,47 @@ class TodoCardWidget extends StatelessWidget {
       color: colorScheme.secondaryContainer,
       child: ListTile(
         leading: Checkbox(
-          checkColor: colorScheme.tertiaryContainer,
           onChanged: (value) {
             update(todoModel.id, value!);
           },
           value: todoModel.status,
         ),
-        title: Text(todoModel.taskName),
-        subtitle: Text(
-          todoModel.dueDate,
-          style: TextStyle(color: colorScheme.onSecondaryContainer),
+        title: Text(todoModel.taskName, style: const TextStyle(fontSize: 20),),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              todoModel.dueDate,
+            ),
+            Text(
+              todoModel.description,
+              style: const TextStyle(fontStyle: FontStyle.italic),
+            ),
+          ],
         ),
-        trailing: Text(
-          todoModel.type,
-          style:
-          TextStyle(fontSize: 20, color: todoTypeColor(todoModel.type)),
+        trailing: SizedBox(
+          width: 150,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                todoModel.type,
+                style: TextStyle(
+                    color: todoTypeColor(
+                      todoModel.type,
+                    ),
+                    fontSize: 20),
+              ),
+              IconButton(
+                onPressed: () {
+                  delete(todoModel.id);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("Task deleted!")));
+                },
+                icon: const Icon(Icons.delete),
+              ),
+            ],
+          ),
         ),
       ),
     );

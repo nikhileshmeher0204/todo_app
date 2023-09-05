@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:todo_app/data.dart';
 import 'package:todo_app/todo_card_widget.dart';
 import 'package:todo_app/todo_model.dart';
-import 'package:todo_app/new_task_page.dart';
+import 'package:todo_app/screens/new_task_page.dart';
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -20,6 +20,12 @@ class _MyHomePageState extends State<MyHomePage> {
         category == todoModel.type) {
       _tempListOfTodo.add(todoModel);
     }
+    setState(() {});
+  }
+
+  void deleteTask(String id) {
+    listOfTodo.removeWhere((element) => element.id == id);
+    _tempListOfTodo.removeWhere((element) => element.id == id);
     setState(() {});
   }
 
@@ -48,6 +54,7 @@ class _MyHomePageState extends State<MyHomePage> {
   List<TodoModel> _tempListOfTodo = [];
   @override
   Widget build(BuildContext context) {
+    final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -60,14 +67,14 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
           );
         },
-        child: const Icon(Icons.add),
+        backgroundColor: colorScheme.tertiary,
+        child: Icon(Icons.add, color: colorScheme.onTertiary,),
       ),
       appBar: AppBar(
         title: Text("TODO: $category"),
         actions: [
           PopupMenuButton(
             onSelected: (value) {
-              print(value);
               category = value;
               if (category == "All List") {
                 _tempListOfTodo = listOfTodo.toList();
@@ -99,12 +106,13 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       ),
-      body: ListView(
+      body:ListView(
         children: _tempListOfTodo
             .map(
               (e) => TodoCardWidget(
                 todoModel: e,
                 update: updateStatus,
+                delete: deleteTask,
               ),
             )
             .toList(),
