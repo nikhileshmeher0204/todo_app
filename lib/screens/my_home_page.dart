@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:todo_app/data.dart';
-import 'package:todo_app/todo_card_widget.dart';
-import 'package:todo_app/todo_model.dart';
+import 'package:todo_app/widgets/todo_card_widget.dart';
+import 'package:todo_app/models/todo_model.dart';
 import 'package:todo_app/screens/new_task_page.dart';
 
 class MyHomePage extends StatefulWidget {

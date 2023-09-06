@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:todo_app/todo_model.dart';
+import 'package:todo_app/models/todo_model.dart';
 
 class NewTaskPage extends StatefulWidget {
   static String routeName = "/newTaskPage";
