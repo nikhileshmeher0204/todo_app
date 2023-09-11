@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:todo_app/data.dart';
 import 'package:todo_app/widgets/todo_card_widget.dart';
@@ -12,7 +13,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   void addTodo(TodoModel todoModel) {
     listOfTodo.add(todoModel);
     if (category == "All List" ||
@@ -56,86 +56,95 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (child) => NewTaskPage(
-                addTodo: addTodo,
-              ),
+        floatingActionButton: OpenContainer(
+          transitionDuration: const Duration(milliseconds: 500),
+          transitionType: ContainerTransitionType.fadeThrough,
+          openBuilder: (BuildContext context, VoidCallback _) {
+            return NewTaskPage(
+              addTodo: addTodo,
+            );
+          },
+          closedElevation: 6.0,
+          closedShape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(
+              Radius.circular(50.0),
             ),
-          );
-        },
-        backgroundColor: colorScheme.tertiary,
-        child: Icon(Icons.add, color: colorScheme.onTertiary,),
-      ),
-      appBar: AppBar(
-        title: Text("TODO: $category"),
-        actions: [
-          PopupMenuButton(
-            onSelected: (value) {
-              category = value;
-              if (category == "All List") {
-                _tempListOfTodo = listOfTodo.toList();
-              } else if (category == "Pending") {
-                _tempListOfTodo = listOfTodo
-                    .where((element) => element.status == false)
-                    .toList();
-              } else if (category == "Finished") {
-                _tempListOfTodo = listOfTodo
-                    .where((element) => element.status == true)
-                    .toList();
-              } else {
-                _tempListOfTodo = listOfTodo
-                    .where((element) => element.type == value)
-                    .toList();
-              }
-              setState(() {});
-            },
-            itemBuilder: (context) => popUpMenuItemTitleList
-                .map(
-                  (e) => PopupMenuItem(
-                    value: e,
-                    child: Text(
-                      e,
-                    ),
-                  ),
-                )
-                .toList(),
           ),
-        ],
-      ),
-      body:Stack(
-        children: [
-           Column(
-             crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Text(_tempListOfTodo.where((element) => element.status == false).isNotEmpty?
-                "You have ${_tempListOfTodo.where((element) => element.status == false).length} tasks left out of ${listOfTodo.length}":" Add new tasks to show them here!",
-                style: const TextStyle(
-                  fontSize: 20,
-                  fontStyle: FontStyle.italic
-                ),
-              ),
-              Expanded(
-                child: ListView(
-                  children: _tempListOfTodo
-                      .map(
-                        (e) => TodoCardWidget(
-                      todoModel: e,
-                      update: updateStatus,
-                      delete: deleteTask,
+          closedColor: colorScheme.tertiary,
+          closedBuilder: (BuildContext _, VoidCallback openContainer) {
+            return FloatingActionButton(
+              onPressed: openContainer,
+              backgroundColor: colorScheme.tertiary,
+              child: Icon(Icons.add, color: colorScheme.onTertiary),
+            );
+          },
+        ),
+        appBar: AppBar(
+          title: Text("TODO: $category"),
+          actions: [
+            PopupMenuButton(
+              onSelected: (value) {
+                category = value;
+                if (category == "All List") {
+                  _tempListOfTodo = listOfTodo.toList();
+                } else if (category == "Pending") {
+                  _tempListOfTodo = listOfTodo
+                      .where((element) => element.status == false)
+                      .toList();
+                } else if (category == "Finished") {
+                  _tempListOfTodo = listOfTodo
+                      .where((element) => element.status == true)
+                      .toList();
+                } else {
+                  _tempListOfTodo = listOfTodo
+                      .where((element) => element.type == value)
+                      .toList();
+                }
+                setState(() {});
+              },
+              itemBuilder: (context) => popUpMenuItemTitleList
+                  .map(
+                    (e) => PopupMenuItem(
+                      value: e,
+                      child: Text(
+                        e,
+                      ),
                     ),
                   )
-                      .toList(),
+                  .toList(),
+            ),
+          ],
+        ),
+        body: Stack(
+          children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  _tempListOfTodo
+                          .where((element) => element.status == false)
+                          .isNotEmpty
+                      ? "You have ${_tempListOfTodo.where((element) => element.status == false).length} tasks left out of ${listOfTodo.length}"
+                      : " Add new tasks to show them here!",
+                  style: const TextStyle(
+                      fontSize: 20, fontStyle: FontStyle.italic),
                 ),
-              ),
-            ],
-          ),
-        ],
-
-      )
-    );
+                Expanded(
+                  child: ListView(
+                    children: _tempListOfTodo
+                        .map(
+                          (e) => TodoCardWidget(
+                            todoModel: e,
+                            update: updateStatus,
+                            delete: deleteTask,
+                          ),
+                        )
+                        .toList(),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ));
   }
 }
