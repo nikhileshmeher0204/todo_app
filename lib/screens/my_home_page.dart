@@ -29,7 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
     setState(() {});
   }
 
-  String category = "All List";
+  String category = "Pending";
   updateStatus(String id, bool status) async {
     int index = listOfTodo.indexWhere((element) => element.id == id);
     listOfTodo[index].status = status;
@@ -59,7 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
         floatingActionButton: OpenContainer(
           transitionDuration: const Duration(milliseconds: 500),
           transitionType: ContainerTransitionType.fadeThrough,
-          openBuilder: (BuildContext context, VoidCallback _) {
+          openBuilder: (context, openContainer) {
             return NewTaskPage(
               addTodo: addTodo,
             );
@@ -67,11 +67,11 @@ class _MyHomePageState extends State<MyHomePage> {
           closedElevation: 6.0,
           closedShape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(
-              Radius.circular(50.0),
+              Radius.circular(15.0),
             ),
           ),
           closedColor: colorScheme.tertiary,
-          closedBuilder: (BuildContext _, VoidCallback openContainer) {
+          closedBuilder: (context, openContainer) {
             return FloatingActionButton(
               onPressed: openContainer,
               backgroundColor: colorScheme.tertiary,
